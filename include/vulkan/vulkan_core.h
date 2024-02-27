@@ -7220,8 +7220,13 @@ typedef struct VkDeviceImageMemoryRequirements {
 typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceToolProperties)(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties);
 typedef VkResult (VKAPI_PTR *PFN_vkCreatePrivateDataSlot)(VkDevice device, const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot);
 typedef void (VKAPI_PTR *PFN_vkDestroyPrivateDataSlot)(VkDevice device, VkPrivateDataSlot privateDataSlot, const VkAllocationCallbacks* pAllocator);
+#if defined(__CHERI_PURE_CAPABILITY__)
+typedef VkResult (VKAPI_PTR *PFN_vkSetPrivateData)(VkDevice device, VkObjectType objectType, uintptr_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data);
+typedef void (VKAPI_PTR *PFN_vkGetPrivateData)(VkDevice device, VkObjectType objectType, uintptr_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData);
+#else // defined(__CHERI_PURE_CAPABILITY__)
 typedef VkResult (VKAPI_PTR *PFN_vkSetPrivateData)(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data);
 typedef void (VKAPI_PTR *PFN_vkGetPrivateData)(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData);
+#endif // defined(__CHERI_PURE_CAPABILITY__)
 typedef void (VKAPI_PTR *PFN_vkCmdSetEvent2)(VkCommandBuffer                   commandBuffer, VkEvent                                             event, const VkDependencyInfo*                             pDependencyInfo);
 typedef void (VKAPI_PTR *PFN_vkCmdResetEvent2)(VkCommandBuffer                   commandBuffer, VkEvent                                             event, VkPipelineStageFlags2               stageMask);
 typedef void (VKAPI_PTR *PFN_vkCmdWaitEvents2)(VkCommandBuffer                   commandBuffer, uint32_t                                            eventCount, const VkEvent*                     pEvents, const VkDependencyInfo*            pDependencyInfos);
@@ -7275,14 +7280,22 @@ VKAPI_ATTR void VKAPI_CALL vkDestroyPrivateDataSlot(
 VKAPI_ATTR VkResult VKAPI_CALL vkSetPrivateData(
     VkDevice                                    device,
     VkObjectType                                objectType,
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                                   objectHandle,
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                                    objectHandle,
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     VkPrivateDataSlot                           privateDataSlot,
     uint64_t                                    data);
 
 VKAPI_ATTR void VKAPI_CALL vkGetPrivateData(
     VkDevice                                    device,
     VkObjectType                                objectType,
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                                   objectHandle,
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                                    objectHandle,
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     VkPrivateDataSlot                           privateDataSlot,
     uint64_t*                                   pData);
 
@@ -10400,7 +10413,11 @@ typedef struct VkDebugMarkerObjectNameInfoEXT {
     VkStructureType               sType;
     const void*                   pNext;
     VkDebugReportObjectTypeEXT    objectType;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                      object;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                      object;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     const char*                   pObjectName;
 } VkDebugMarkerObjectNameInfoEXT;
 
@@ -10408,7 +10425,11 @@ typedef struct VkDebugMarkerObjectTagInfoEXT {
     VkStructureType               sType;
     const void*                   pNext;
     VkDebugReportObjectTypeEXT    objectType;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                      object;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                      object;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                      tagName;
     size_t                        tagSize;
     const void*                   pTag;
@@ -11422,7 +11443,11 @@ typedef struct VkDebugUtilsObjectNameInfoEXT {
     VkStructureType    sType;
     const void*        pNext;
     VkObjectType       objectType;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t          objectHandle;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t           objectHandle;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     const char*        pObjectName;
 } VkDebugUtilsObjectNameInfoEXT;
 
@@ -11461,7 +11486,11 @@ typedef struct VkDebugUtilsObjectTagInfoEXT {
     VkStructureType    sType;
     const void*        pNext;
     VkObjectType       objectType;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t          objectHandle;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t           objectHandle;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t           tagName;
     size_t             tagSize;
     const void*        pTag;
@@ -13942,7 +13971,11 @@ typedef struct VkDeviceMemoryReportCallbackDataEXT {
     uint64_t                            memoryObjectId;
     VkDeviceSize                        size;
     VkObjectType                        objectType;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                           objectHandle;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                            objectHandle;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     uint32_t                            heapIndex;
 } VkDeviceMemoryReportCallbackDataEXT;
 
@@ -14068,8 +14101,13 @@ typedef VkPrivateDataSlotCreateInfo VkPrivateDataSlotCreateInfoEXT;
 
 typedef VkResult (VKAPI_PTR *PFN_vkCreatePrivateDataSlotEXT)(VkDevice device, const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot);
 typedef void (VKAPI_PTR *PFN_vkDestroyPrivateDataSlotEXT)(VkDevice device, VkPrivateDataSlot privateDataSlot, const VkAllocationCallbacks* pAllocator);
+#if defined(__CHERI_PURE_CAPABILITY__)
+typedef VkResult (VKAPI_PTR *PFN_vkSetPrivateDataEXT)(VkDevice device, VkObjectType objectType, uintptr_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data);
+typedef void (VKAPI_PTR *PFN_vkGetPrivateDataEXT)(VkDevice device, VkObjectType objectType, uintptr_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData);
+#else // defined(__CHERI_PURE_CAPABILITY__)
 typedef VkResult (VKAPI_PTR *PFN_vkSetPrivateDataEXT)(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data);
 typedef void (VKAPI_PTR *PFN_vkGetPrivateDataEXT)(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData);
+#endif // defined(__CHERI_PURE_CAPABILITY__)
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreatePrivateDataSlotEXT(
