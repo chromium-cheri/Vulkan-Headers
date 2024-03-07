@@ -10321,7 +10321,11 @@ typedef VkFlags VkDebugReportFlagsEXT;
 typedef VkBool32 (VKAPI_PTR *PFN_vkDebugReportCallbackEXT)(
     VkDebugReportFlagsEXT                       flags,
     VkDebugReportObjectTypeEXT                  objectType,
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                                   object,
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                                    object,
+#endif // defined(__CHERI_PURE_CAPABILITY__)
     size_t                                      location,
     int32_t                                     messageCode,
     const char*                                 pLayerPrefix,
