@@ -26,7 +26,7 @@ extern "C" {
 
 
 #ifndef VK_USE_64_BIT_PTR_DEFINES
-    #if defined(__LP64__) || defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__) ) || defined(_M_X64) || defined(__ia64) || defined (_M_IA64) || defined(__aarch64__) || defined(__powerpc64__)
+    #if (defined(__LP64__) || defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__) ) || defined(_M_X64) || defined(__ia64) || defined (_M_IA64) || defined(__aarch64__) || defined(__powerpc64__)) && !defined(__CHERI_PURE_CAPABILITY__)
         #define VK_USE_64_BIT_PTR_DEFINES 1
     #else
         #define VK_USE_64_BIT_PTR_DEFINES 0
@@ -54,7 +54,11 @@ extern "C" {
     #if (VK_USE_64_BIT_PTR_DEFINES==1)
         #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef struct object##_T *object;
     #else
-        #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef uint64_t object;
+        #if defined(__CHERI_PURE_CAPABILITY__)
+            #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef uintptr_t object;
+        #else
+            #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef uint64_t object;
+        #endif
     #endif
 #endif
 
