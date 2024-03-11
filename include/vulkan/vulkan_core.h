@@ -12293,7 +12293,11 @@ typedef struct VkAccelerationStructureInstanceKHR {
     uint32_t                      mask:8;
     uint32_t                      instanceShaderBindingTableRecordOffset:24;
     VkGeometryInstanceFlagsKHR    flags:8;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                     accelerationStructureReference;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                      accelerationStructureReference;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
 } VkAccelerationStructureInstanceKHR;
 
 typedef VkAccelerationStructureInstanceKHR VkAccelerationStructureInstanceNV;
@@ -14544,7 +14548,11 @@ typedef struct VkAccelerationStructureMatrixMotionInstanceNV {
     uint32_t                      mask:8;
     uint32_t                      instanceShaderBindingTableRecordOffset:24;
     VkGeometryInstanceFlagsKHR    flags:8;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                     accelerationStructureReference;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                      accelerationStructureReference;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
 } VkAccelerationStructureMatrixMotionInstanceNV;
 
 typedef struct VkSRTDataNV {
@@ -14573,7 +14581,11 @@ typedef struct VkAccelerationStructureSRTMotionInstanceNV {
     uint32_t                      mask:8;
     uint32_t                      instanceShaderBindingTableRecordOffset:24;
     VkGeometryInstanceFlagsKHR    flags:8;
+#if defined(__CHERI_PURE_CAPABILITY__)
+    uintptr_t                     accelerationStructureReference;
+#else // defined(__CHERI_PURE_CAPABILITY__)
     uint64_t                      accelerationStructureReference;
+#endif // defined(__CHERI_PURE_CAPABILITY__)
 } VkAccelerationStructureSRTMotionInstanceNV;
 
 typedef union VkAccelerationStructureMotionInstanceDataNV {
